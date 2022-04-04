@@ -81,8 +81,10 @@ WHERE _author_ IN ('Булгаков М.А', 'Достоевский Ф.М.');
 #### Logical sequence of operations
 1. FROM
 2. WHERE
-3. SELECT
-4. ORDER BY
+3. GROUP BY
+4. HAVING
+5. SELECT
+6. ORDER BY
 
 #### Selecting data with sorting
 Keywords: **ORDER BY, ASC, DESC**
@@ -91,3 +93,116 @@ SELECT _author_, _title_, _amount_ AS _Количество_
 FROM _book_
 WHERE _price_ < 750
 ORDER BY _author_, _amount_ DESC;
+
+#### Selecting data with operator LIKE
+Keywords: **LIKE**
+_Example:_
+SELECT _title_
+FROM _book_
+WHERE _title_ LIKE _'Б%'_;
+
+#### Selecting unique elements of a column
+Keywords: **DISTINCT, GROUP BY**
+_Example:_
+SELECT DISTINTC _author_
+FROM _book_;
+
+SELECT _author_
+FROM _book_
+GROUP BY _author_;
+
+#### Selecting data, group functions SUM and COUNT
+Keywords: **COUNT, SUM**
+_Example:_
+SELECT _author_, COUNT(_author_), COUNT(_amount_), COUNT(*)
+FROM _book_
+GROUP BY _author_;
+
+#### Selecting data, group functions MIN, MAX, AVG
+Keywords: **MIN, MAX, AVG**
+_Example:_
+SELECT _author_, MIN(_price_) AS _min\_price_
+FROM _book_
+GROUP BY _author_;
+
+#### Selecting data based on conditions, group functions
+Keywords: **HAVING**
+_Example:_
+SELECT _author_
+  MIN(_price_) AS _Minimal\_price_,
+  MAX(_price_) AS _Maximum\_price_
+FROM _book_
+GROUP BY _author_
+HAVING SUM(_price_ * _amount_) > _5000_;
+
+#### Nested queries in WHERE clause
+_Example_:
+SELECT _title_, _author_, _price_, _amount_
+FROM _book_
+WHERE _price_ = (
+  SELECT MIN(_price_)
+  FROM _book_
+);
+
+#### Nested query, operator IN
+_Example:_
+SELECT _title_, _author_, _price_
+FROM _book_
+WHERE _author_ IN (
+  SELECT _author_
+  FROM _book_
+  GROUP BY _author_
+  HAVING SUM(_amount_) >= 12
+);
+
+#### Nested queries, operators ANY and ALL
+_Example:_
+SELECT _title_, _author_, _amount_, _price_
+FROM _book_
+WHERE _amount_ < ALL (
+  SELECT AVG(_amount_)
+  FROM _book_
+  GROUP BY _author_
+);
+**NOTE**: ANY and ALL are used only with nested queries
+
+#### Inserting entries from another table
+_Example:_
+INSERT INTO _book_(_title_, _author_, _price_, _amount_)
+  SELECT _title_, _author_, _price_, _amount_
+  FROM _supply_
+  WHERE _author_ NOT IN ('_Булгаков М.А._', '_Достоевский Ф.М._');
+
+#### Update query
+Keywords: **UPDATE, SET**
+_Example:_
+UPDATE _book_
+SET _price_ = 0.7 * _price_
+WHERE _amount_ < 5;
+
+#### Delete query
+Keywords: **DELETE**
+_Example:_
+DELETE FROM _supply_
+WHERE _title_ IN (
+  SELECT _title_
+  FROM _book_
+);
+
+#### Limiting the table output
+Keyword: **LIMIT**
+_Example:_
+SELECT *
+FROM _trip_
+ORDER BY _date\_first_
+LIMIT 1;
+
+#### DATEDIFF function
+_Example:_
+DATEDIFF('2020-04-01', '2020-03-28')=4
+
+#### MONTH function
+_Example:_
+MONTH('2020-04-12')=4
+
+#### MONTHNAME('2020-04-12')='April'
