@@ -205,4 +205,74 @@ DATEDIFF('2020-04-01', '2020-03-28')=4
 _Example:_
 MONTH('2020-04-12')=4
 
-#### MONTHNAME('2020-04-12')='April'
+#### MONTHNAME function
+_Example:_
+MONTHNAME('2020-04-12')='April'
+
+#### DAY, MONTH, YEAR functions
+_Example:_
+DAY('2020-02-01')=1
+MONTH('2020-02-01')=2
+YEAR('2020-02-01)=2020
+
+#### Creating a table with foreign keys
+Keywords: **FOREIGN KEY, REFERENCES**
+_Example:_
+CREATE TABLE _book_ (
+    _book\_id_ INT PRIMARY KEY AUTO_INCREMENT, 
+    _title_ VARCHAR(50), 
+    _author\_id_ INT NOT NULL, 
+    _price_ DECIMAL(8,2), 
+    _amount_ INT, 
+    FOREIGN KEY (_author\_id_)  REFERENCES author (_author\_id_) 
+);
+
+#### After deleting entry from main table
+Keywords: **ON DELETE, CASCADE, SET NULL, SET DEFAULT, RESTRICT**
+_Example:_
+CREATE TABLE _book_ (
+    _book\_id_ INT PRIMARY KEY AUTO_INCREMENT, 
+    _title_ VARCHAR(50), 
+    _author\_id_ INT NOT NULL, 
+    _price_ DECIMAL(8,2), 
+    _amount_ INT, 
+    FOREIGN KEY (_author\_id_)  REFERENCES _author_ (_author\_id_) ON DELETE CASCADE
+);
+
+#### INNER JOIN
+Keywords: **INNER JOIN, ON**
+_Example:_
+SELECT _title_, _name\_author_
+FROM 
+    _author_ INNER JOIN _book_
+    ON _author.author\_id_ = _book.author\_id_;
+
+#### LEFT and RIGHT OUTER JOIN
+Keywords: ***LEFT JOIN, RIGHT JOIN***
+_Example:_
+SELECT _name\_author_, _title_ 
+FROM _author_ LEFT JOIN _book_
+     ON _author.author\_id_ = _book.author\_id_
+ORDER BY _name\_author_;
+
+#### CROSS JOIN
+Keywords: **CROSS JOIN**
+_Example:_
+SELECT _name\_author_, _name\_genre_
+FROM 
+    _author_ CROSS JOIN _genre_;
+
+#### RAND, DATE_ADD functions
+Keywords: **RAND, DATE_ADD**
+_Example_:
+DATE_ADD('2020-02-02', INTERVAL 45 DAY) returns 18 March 2020
+DATE_ADD('2020-02-02', INTERVAL 6 MONTH) returns 2 AUGUST 2020
+FLOOR(RAND() * 365)
+
+#### Joining tables with USING
+Keywords: **USING**
+_Example:_
+SELECT _title_, _name\_author_, _author\_id_
+FROM 
+    _author_ INNER JOIN _book_
+    USING(_author\_id_);
